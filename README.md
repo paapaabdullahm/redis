@@ -7,32 +7,32 @@
 # Example usage
 
 &nbsp; 
-**--with docker run** 
+**with docker run** 
 
 `$ docker run --name some-redis -d redis`
 
 &nbsp;  
-**--with persistent storage**
+**with persistent storage**
 
 `$ docker run --name some-redis -d redis redis-server --appendonly yes`
 
 &nbsp;  
-**--connect to it from an application**
+**connect to it from an application**
 
 `$ docker run --name some-app --link some-redis:redis -d application-that-uses-redis`
 
 &nbsp;  
-**--via redis-cli**
+**via redis-cli**
 
 `$ docker run -it --link some-redis:redis --rm redis redis-cli -h redis -p 6379`
 
 &nbsp;  
-**--want to use your own redis.conf**
+**want to use your own redis.conf**
 
 `$ docker run -v /myredis/conf/redis.conf:/usr/local/etc/redis/redis.conf --name myredis redis redis-server /usr/local/etc/redis/redis.conf`
 
 &nbsp;  
-**--with docker-compose.yml file** 
+**with docker-compose.yml file** 
 
 ```shell
   redis:
