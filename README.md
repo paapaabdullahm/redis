@@ -29,7 +29,10 @@
 &nbsp;  
 **want to use your own redis.conf**
 
-`$ docker run -v /myredis/conf/redis.conf:/usr/local/etc/redis/redis.conf --name myredis redis redis-server /usr/local/etc/redis/redis.conf`
+```shell
+$ docker run -v /myredis/conf/redis.conf:/usr/local/etc/redis/redis.conf \
+  --name myredis redis redis-server /usr/local/etc/redis/redis.conf
+```
 
 &nbsp;  
 **with docker-compose.yml file** 
