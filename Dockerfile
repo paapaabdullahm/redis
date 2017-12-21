@@ -1,4 +1,4 @@
-FROM redis:latest
+FROM redis:4.0.6
 
 MAINTAINER Abdullah Morgan <paapaabdullahm@gmail.com>
 
@@ -8,4 +8,4 @@ VOLUME /data
 
 EXPOSE 6379
 
-#CMD ["redis-server"]
+CMD ["redis-server"]
