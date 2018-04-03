@@ -86,8 +86,12 @@ $ docker run -v /myredis/conf/redis.conf:/usr/local/etc/redis/redis.conf \
 **with docker-compose.yml file** 
 
 ```shell
+  app:
+    image: foo/bar
+    container_name: app
+  
   redis:
-    image: pam79/redis
+    image: pam79/redis-server
     container_name: redis
     volumes:
       - chdata:/data
