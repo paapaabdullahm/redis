@@ -1,6 +1,6 @@
-FROM redis:4.0.6
+FROM redis:4.0.9
 
-MAINTAINER Abdullah Morgan <paapaabdullahm@gmail.com>
+MAINTAINER pam79 <paapaabdullahm@gmail.com>
 
 #COPY redis.conf /usr/local/etc/redis/redis.conf
 
