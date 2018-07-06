@@ -45,34 +45,34 @@ Redis is an open-source, networked, in-memory, key-value data store with optiona
 
 * #### Use the redis-cli like any other executable
 
-  e.g: Connect to the redis server
+  Connect to the redis server
   ```shell
   $ redis-cli --link redis -h redis -p 6379
   ```
 
-  e.g: Find redis version
+  Find redis version
   ```shell
   $ redis-cli --version
   ```
 
-  e.g: Flush the redis database
+  Flush the redis database
   ```shell
   $ redis-cli flushall
   ```
 
-  e.g: Getting input from other programs
+  Getting input from other programs
   ```shell
   $ redis-cli -x set foo < /etc/services
   ```
 
-  e.g: Run in an interactive REPL mode
+  Run in an interactive REPL mode
   ```shell
   $ redis-cli
   127.0.0.1:6379> ping
   PONG
   ```
 
-  e.g: Continuous stats mode to monitor Redis instances in real time
+  Continuous stats mode to monitor Redis instances in real time
   ```shell
   $ redis-cli --stat
   ```
