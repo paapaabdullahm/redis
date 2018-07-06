@@ -1,6 +1,5 @@
-FROM redis:4.0.9
-
-MAINTAINER pam79 <paapaabdullahm@gmail.com>
+FROM redis:4.0
+LABEL maintainer="Abdullah Morgan paapaabdullahm@gmail.com"
 
 VOLUME /data
 
