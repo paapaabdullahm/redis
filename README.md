@@ -4,88 +4,108 @@ Redis is an open-source, networked, in-memory, key-value data store with optiona
 
 ## Example Usage
 
-* #### With docker-compose.yml file
+#### With docker-compose.yml file
 
-  ```shell
-  app:
-    image: foo/bar
-    container_name: app
-  
-  redis:
-    image: pam79/redis
-    container_name: redis
+```sh
+version: '3.7'
+
+services:
+
+  app-svc:
+    image: node:latest
+    container_name: app-svc
+    ports:
+      - "8000:8000"
+    networks:
+      - app-tier
+      - cache-tier
+    restart: always
+
+  cache-svc:
+    image: pam79/redis:v5.0.7
+    container_name: cache-svc
     volumes:
-      - chdata:/data
+      - type: bind
+        source: ./redis.conf
+        target: /etc/redis/custom.conf
+      - type: volume
+        source: chdata
+        target: /data
+    environment:
+      - REDIS_ENV=dev
     ports:
       - "6379:6379"
-    depends_on:
-      - app
     networks:
-      - default
+      - cache-tier
+    restart: always
+
+volumes:
+
+  chdata:
+
+networks:
+
+  app-tier:
+  
+  cache-tier:
   ```
 
-* #### With docker run
+#### With docker run
 
-  ```shell
-  $ docker run --name redis -d pam79/redis
-  ```
+```sh
+$ docker run --name redis -d pam79/redis
+```
 
-* #### Docker run with persistent storage
+#### With redis-cli via a .bashrc or .zshrc function
 
-  ```shell
-  $ docker run --name redis -d pam79/redis --appendonly yes
-  ```
+$ vim .bashrc
+```sh
+redis-cli() { docker run -it --rm pam79/redis redis-cli "$@"; }
+```
 
-* #### With redis-cli via a .bashrc or .zshrc function
+#### Use the redis-cli like any other executable
 
-  $ vim .bashrc
-  ```shell
-  redis-cli() { docker run -it --rm pam79/redis redis-cli "$@"; }
-  ```
+Connect to the redis server
+```sh
+$ redis-cli --link redis -h redis -p 6379
+```
 
-* #### Use the redis-cli like any other executable
+Find redis cli version
+```sh
+$ redis-cli --version
+```
 
-  Connect to the redis server
-  ```shell
-  $ redis-cli --link redis -h redis -p 6379
-  ```
+Flush the redis database
+```sh
+$ redis-cli flushall
+```
 
-  Find redis version
-  ```shell
-  $ redis-cli --version
-  ```
+Getting input from other programs
+```sh
+$ redis-cli -x set foo < /etc/services
+```
 
-  Flush the redis database
-  ```shell
-  $ redis-cli flushall
-  ```
+Run in an interactive REPL mode
+```sh
+$ redis-cli
+127.0.0.1:6379> ping
+PONG
+```
 
-  Getting input from other programs
-  ```shell
-  $ redis-cli -x set foo < /etc/services
-  ```
+Continuous stats mode to monitor Redis instances in real time
+```sh
+$ redis-cli --stat
+```
 
-  Run in an interactive REPL mode
-  ```shell
-  $ redis-cli
-  127.0.0.1:6379> ping
-  PONG
-  ```
+#### Have your own redis.conf inside the redis server
 
-  Continuous stats mode to monitor Redis instances in real time
-  ```shell
-  $ redis-cli --stat
-  ```
+```sh
+$ docker run --name redis \
+  -v ./redis.conf:/etc/redis/custom.conf \
+  pam79/redis /etc/redis/custom.conf
+```
 
-* #### Have your own redis.conf inside the redis server
-
-  ```shell
-  $ docker run --name myredis \
-    -v /myredis/redis.conf:/etc/redis/redis.conf \
-    pam79/redis /etc/redis/redis.conf
-  ```
-
-## IMPORTANT !!
+## Important Note
 
 Transparent Huge Pages (THP) is a Linux memory management system that reduces the overhead of Translation Lookaside Buffer (TLB) lookups on machines with large amounts of memory by using larger memory pages.
 
@@ -93,41 +113,41 @@ However, database workloads often perform poorly with THP, because they tend to 
 
 ## Disable Transparent Huge Pages (THP)
 
-* #### Open rc.local file
+#### Open rc.local file
 
-  ```shell
-  $ sudo vim /etc/rc.local
-  ```
+```sh
+$ sudo vim /etc/rc.local
+```
 
-* #### Add following content before "exit 0"
+#### Add following content before "exit 0"
 
-  ```shell
-  if test -f /sys/kernel/mm/transparent_hugepage/enabled; then
-     echo never > /sys/kernel/mm/transparent_hugepage/enabled
-  fi
-  if test -f /sys/kernel/mm/transparent_hugepage/defrag; then
-     echo never > /sys/kernel/mm/transparent_hugepage/defrag
-  fi
-  ```
+```sh
+if test -f /sys/kernel/mm/transparent_hugepage/enabled; then
+  echo never > /sys/kernel/mm/transparent_hugepage/enabled
+fi
+if test -f /sys/kernel/mm/transparent_hugepage/defrag; then
+  echo never > /sys/kernel/mm/transparent_hugepage/defrag
+fi
+```
 
-* #### Set vm.overcommit_memory = 1
+#### Set vm.overcommit_memory = 1
 
-  This is done to avoid the WARNING: "overcommit_memory is set to 0! Background save may fail under low memory condition".
+This is done to avoid the WARNING: "overcommit_memory is set to 0! Background save may fail under low memory condition".
 
-* #### Open sysctl.conf file
+#### Open sysctl.conf file
 
-  ```shell
-  $ sudo vim /etc/sysctl.conf
-  ```
+```sh
+$ sudo vim /etc/sysctl.conf
+```
 
-* #### Add following content to it
+#### Add following content to it
 
-  ```shell
-  vm.overcommit_memory = 1
-  ```
+```sh
+vm.overcommit_memory = 1
+```
 
-* #### For this to immediately take effect, run the ff command:
+#### For this to immediately take effect, run the ff command:
 
-  ```shell
-  $ sudo sysctl vm.overcommit_memory=1
-  ```
+```sh
+$ sudo sysctl vm.overcommit_memory=1
+```
