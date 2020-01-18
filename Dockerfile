@@ -1,4 +1,4 @@
-FROM redis:4.0
+FROM redis:5.0.7-buster
 LABEL maintainer="Paapa Abdullah Morgan <paapaabdullahm@gmail.com>"
 
 ENV REDIS_ENV=""
